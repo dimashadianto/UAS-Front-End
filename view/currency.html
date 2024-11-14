@@ -1,0 +1,31 @@
+<div class="currency-view">
+    <h2>Country Information</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Country Name</th>
+                <th>Currency</th>
+                <th>Symbol</th>
+                <th>Telephone Code</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr ng-repeat="country in countriesToShow">
+                <td><img ng-src="{{ country.flag }}" alt="{{ country.name }} flag" width="50"></td>
+                <td>{{ country.name }}</td>
+                <td>{{ country.currencyName }}</td>
+                <td>{{ country.currencySymbol }}</td>
+                <td>{{ country.telCode }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination">
+        <button ng-click="prevPage()" ng-disabled="currentPage === 1">Previous</button>
+        <button ng-repeat="page in pagesToShow" ng-click="goToPage(page)" ng-disabled="page === '...'">
+            {{ page }}
+        </button>
+        <button ng-click="nextPage()" ng-disabled="currentPage === totalPages">Next</button>
+    </div>
+</div>

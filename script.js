@@ -3,7 +3,11 @@ var app = angular.module('countrypediaApp', ['ngRoute']);
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/', {
-            templateUrl: 'home.html',
+            templateUrl: 'view/home.html',
+            controller: 'CountryController'
+        })
+        .when('/currency', {
+            templateUrl: 'view/currency.html',
             controller: 'CountryController'
         })
         .otherwise({
@@ -16,7 +20,19 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
     $scope.countriesPerPage = 18;
 
     $http.get('https://restcountries.com/v3.1/all').then(function(response) {
-        $scope.countries = response.data;
+        $scope.countries = response.data.map(country => {
+            const currencyKey = country.currencies ? Object.keys(country.currencies)[0] : null;
+            const currency = currencyKey ? country.currencies[currencyKey] : { name: 'N/A', symbol: 'N/A' };
+
+            return {
+                name: country.name.common,
+                flag: country.flags.png,
+                currencyName: currency.name,
+                currencySymbol: currency.symbol,
+                telCode: country.idd ? `${country.idd.root}${country.idd.suffixes[0]}` : 'N/A'
+            };
+        });
+
         $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
         updateCountriesList();
         updatePagination();
