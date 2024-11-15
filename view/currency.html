@@ -1,6 +1,8 @@
-<div class="currency-view">
+<div class="currency-view" ng-controller="CurrencyController">
     <h2>Country Information</h2>
-    <table>
+    <div ng-show="loading">Loading data...</div>
+    <div ng-show="error">{{ error }}</div>
+    <table ng-hide="loading || error">
         <thead>
             <tr>
                 <th>Flag</th>
