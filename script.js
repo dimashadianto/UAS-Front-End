@@ -14,6 +14,8 @@ app.config(['$routeProvider', function($routeProvider) {
 app.controller('CountryController', ['$scope', '$http', function($scope, $http) {
     $scope.currentPage = 1;
     $scope.countriesPerPage = 18;
+    $scope.searchQuery = '';
+    $scope.searchType = 'name';
 
     $http.get('https://restcountries.com/v3.1/all').then(function(response) {
         $scope.countries = response.data;
@@ -25,7 +27,7 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
     function updateCountriesList() {
         const startIndex = ($scope.currentPage - 1) * $scope.countriesPerPage;
         $scope.countriesToShow = $scope.countries.slice(startIndex, startIndex + $scope.countriesPerPage);
-    }
+    };
 
     function updatePagination() {
         const total = $scope.totalPages;
@@ -43,7 +45,7 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
                 $scope.pagesToShow = [1, '...', current - 1, current, current + 1, '...', total];
             }
         }
-    }
+    };
 
     $scope.goToPage = function(page) {
         if (page >= 1 && page <= $scope.totalPages) {
@@ -68,4 +70,27 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
             updatePagination();
         }
     };
+
+    $scope.searchCountry = function() {
+        let url;
+        if ($scope.searchQuery) {
+            if ($scope.searchType === 'name') {
+                url = `https://restcountries.com/v3.1/name/${$scope.searchQuery}`;
+            } else if ($scope.searchType === 'code') {
+                url = `https://restcountries.com/v3.1/alpha/${$scope.searchQuery}`;
+            }
+        } else {
+            url = 'https://restcountries.com/v3.1/all';
+        }
+    
+        $http.get(url).then(function(response) {
+            $scope.countries = response.data;
+            $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
+            $scope.currentPage = 1;
+            updateCountriesList();
+            updatePagination();
+        }).catch(function(error) {
+            alert('Country "' + $scope.searchQuery + '" not found. Please try again.');
+        });
+    };    
 }]);

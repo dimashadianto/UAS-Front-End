@@ -1,5 +1,12 @@
 <div class="countries">
-    <h1>List of Countries in the World</h1>
+    <div class="search-container">
+        <input type="text" ng-model="searchQuery" placeholder="Search ...">
+        <select ng-model="searchType">
+            <option value="name">Name</option>
+            <option value="code">Code</option>
+        </select>
+        <button ng-click="searchCountry()"><i class="bi bi-search"></i></button>
+    </div>    
     <ul class="countries-list">
         <li ng-repeat="country in countriesToShow">
             <div class="country-item">
@@ -7,6 +14,7 @@
                 <div class="country-info">
                     <h2>{{ country.name.common }}</h2>
                     <p>{{ country.capital ? country.capital[0] : 'Not Available' }}</p>
+                    <p class="code">{{ country.ccn3 ? country.ccn3 : '...' }}</p>
                 </div>
             </div>
         </li>
