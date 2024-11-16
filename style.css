@@ -10,10 +10,13 @@
     --black: #000000;
 }
 
-body {
+html, body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
+    height: 100%; 
+    display: flex;
+    flex-direction: column;
 }
 
 nav {
@@ -50,13 +53,6 @@ nav a:hover {
 
 nav a:hover::after {
     width: 70%;
-}
-
-.countries h1 {
-    color: var(--brown-dark);
-    padding: 20px 0;
-    text-align: center;
-    margin: auto;
 }
 
 .countries-list {
@@ -114,11 +110,52 @@ nav a:hover::after {
     max-width: 160px;
 }
 
+.country-info .code {
+    color: var(--black);
+    font-style: normal;
+    margin-top: 5px;
+}
+
+.countries .search-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0px;
+}
+
+.countries .search-container input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--brown-light);
+}
+
+.countries .search-container select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--brown-light);
+}
+
+.countries .search-container button {
+    padding: 10px;
+    background-color: var(--brown-light);
+    color: var(--white);
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.countries .search-container button:hover {
+    background-color: var(--beige);
+}
+
 .pagination {
     display: flex;
     justify-content: center;
     gap: 5px;
-    margin-top: 30px;
+    margin: 20px 0px;
 }
 
 .page-number {
@@ -153,9 +190,8 @@ footer {
     padding: 20px 0;
     text-align: center;
     font-size: 14px;
-    bottom: 0;
+    margin-top: auto; 
     width: 100%;
-    margin-top: 20px;
 }
 
 footer p {
