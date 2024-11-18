@@ -1,0 +1,21 @@
+<div class="country-details">
+    <div class="details-header">
+        <img ng-src="{{ country.flags.png }}" alt="Flag of {{ country.name.common }}" class="flag-large">
+        <h1>{{ country.name.common }}</h1>
+        <p><strong>Official Name:</strong> {{ country.name.official }}</p>
+        <p><strong>Capital:</strong> {{ country.capital ? country.capital[0] : 'Not Available' }}</p>
+        <p><strong>Region:</strong> {{ country.region }}</p>
+        <p><strong>Population:</strong> {{ country.population | number }}</p>
+    </div>
+
+    <div class="translations">
+        <h2>Translations Of Country Name In Other Languange</h2>
+        <ul>
+            <li ng-repeat="(lang, translation) in country.translations">
+                <strong>{{ lang }}:</strong> {{ translation.common }}
+            </li>
+        </ul>
+    </div>
+
+    <button class="back-button" ng-click="goBack()">Back to Home</button>
+</div>
