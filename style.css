@@ -116,6 +116,28 @@ nav a:hover::after {
     margin-top: 5px;
 }
 
+.alphabet-list {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.letter-btn {
+    background-color: var(--cream);
+    padding: 10px 15px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    border-radius: 5px;
+    color: var(--white);
+}
+
+.letter-btn:hover {
+    background-color: var(--beige);
+}
+
 .countries .search-container {
     display: flex;
     justify-content: center;
@@ -149,6 +171,11 @@ nav a:hover::after {
 
 .countries .search-container button:hover {
     background-color: var(--beige);
+}
+
+.error-message p {
+    text-align: center;
+    margin: 0;
 }
 
 .pagination {

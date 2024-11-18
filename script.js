@@ -16,6 +16,7 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
     $scope.countriesPerPage = 18;
     $scope.searchQuery = '';
     $scope.searchType = 'name';
+    $scope.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
 
     $http.get('https://restcountries.com/v3.1/all').then(function(response) {
         $scope.countries = response.data;
@@ -84,7 +85,14 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
         }
     
         $http.get(url).then(function(response) {
-            $scope.countries = response.data;
+            if ($scope.searchQuery && $scope.searchType === 'name') {
+                $scope.countries = response.data.filter(function(country) {
+                    return country.name.common.toLowerCase().includes($scope.searchQuery.toLowerCase());
+                });
+            } else {
+                $scope.countries = response.data;
+            }
+            
             $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
             $scope.currentPage = 1;
             updateCountriesList();
@@ -93,4 +101,23 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
             alert('Country "' + $scope.searchQuery + '" not found. Please try again.');
         });
     };    
+
+    $scope.filterByLetter = function(letter) {
+        $http.get('https://restcountries.com/v3.1/all').then(function(response) {
+            $scope.countries = response.data.filter(function(country) {
+                return country.name.common.charAt(0).toUpperCase() === letter;
+            });
+
+            if ($scope.countries.length === 0) {
+                $scope.errorMessage = `No countries found starting with the letter "${letter}".`;
+            } else {
+                $scope.errorMessage = '';
+            }
+
+            $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
+            $scope.currentPage = 1;
+            updateCountriesList();
+            updatePagination();
+        });
+    };
 }]);

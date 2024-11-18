@@ -1,4 +1,7 @@
 <div class="countries">
+    <div class="alphabet-list">
+        <button ng-click="filterByLetter(letter)" ng-repeat="letter in alphabet" class="letter-btn">{{ letter }}</button>
+    </div>   
     <div class="search-container">
         <input type="text" ng-model="searchQuery" placeholder="Search ...">
         <select ng-model="searchType">
@@ -7,6 +10,9 @@
         </select>
         <button ng-click="searchCountry()"><i class="bi bi-search"></i></button>
     </div>    
+    <div ng-if="errorMessage" >
+        <p>{{ errorMessage }}</p>
+    </div>
     <ul class="countries-list">
         <li ng-repeat="country in countriesToShow">
             <div class="country-item">
@@ -21,11 +27,8 @@
     </ul>
 
     <div class="pagination">
-        <button class="prev" ng-click="prevPage()" ng-disabled="currentPage === 1"><i
-                class="bi bi-chevron-left"></i></button>
-        <span class="page-number" ng-repeat="page in pagesToShow track by $index"
-            ng-click="page !== '...' && goToPage(page)" ng-class="{'active': currentPage === page}">{{ page }}</span>
-        <button class="next" ng-click="nextPage()" ng-disabled="currentPage === totalPages"><i
-                class="bi bi-chevron-right"></i></button>
+        <button class="prev" ng-click="prevPage()" ng-disabled="currentPage === 1"><i class="bi bi-chevron-left"></i></button>
+        <span class="page-number" ng-repeat="page in pagesToShow track by $index" ng-click="page !== '...' && goToPage(page)" ng-class="{'active': currentPage === page}">{{ page }}</span>
+        <button class="next" ng-click="nextPage()" ng-disabled="currentPage === totalPages"><i class="bi bi-chevron-right"></i></button>
     </div>
 </div>
