@@ -6,12 +6,16 @@ app.config(['$routeProvider', function($routeProvider) {
             templateUrl: 'home.html',
             controller: 'CountryController'
         })
+        .when('/details/:countryName',{
+            templateUrl: 'details.html',
+            controller: 'CountryDetailsController'
+        })
         .otherwise({
             redirectTo: '/'
         });
 }]);
 
-app.controller('CountryController', ['$scope', '$http', function($scope, $http) {
+app.controller('CountryController', ['$scope', '$http', '$location', function($scope, $http, $location) {
     $scope.currentPage = 1;
     $scope.countriesPerPage = 18;
     $scope.searchQuery = '';
@@ -119,5 +123,31 @@ app.controller('CountryController', ['$scope', '$http', function($scope, $http) 
             updateCountriesList();
             updatePagination();
         });
+    };
+    
+    $scope.viewDetails = function (countryName){
+        $location.path(`/details/${countryName}`);
+    };
+}]);
+
+app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '$location', function ($scope, $routeParams, $http, $location) {
+    const countryName = $routeParams.countryName;
+
+    $http.get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
+        .then(function (response) {
+            if (response.data && response.data.length > 0) {
+                $scope.country = response.data[0];
+            } else {
+                alert('Country details not found.');
+                $location.path('/');
+            }
+        })
+        .catch(function (error) {
+            alert('Error fetching country details.');
+            $location.path('/');
+        });
+
+    $scope.goBack = function () {
+        $location.path('/');
     };
 }]);
