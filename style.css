@@ -65,6 +65,10 @@ nav a:hover::after {
     margin: auto;
 }
 
+.countries-list a {
+    text-decoration: none;
+}
+
 .country-item {
     background-color: var(--grey-light);
     padding: 20px;
