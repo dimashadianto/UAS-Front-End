@@ -141,6 +141,46 @@ app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '
         .then(function (response) {
             if (response.data && response.data.length > 0) {
                 $scope.country = response.data[0];
+                $scope.selectedLang = null;
+
+                const countryCcn3 = $scope.country.ccn3;
+
+                if (countryCcn3) {
+                    $http.get(`http://api.geonames.org/countryInfoJSON?username=dimashadianto`)
+                        .then(function (geoResponse) {
+                            const geoCountries = geoResponse.data.geonames;
+
+                            const matchedCountry = geoCountries.find(c => c.isoNumeric === countryCcn3);
+
+                            if (matchedCountry) {
+                                const geonameId = matchedCountry.geonameId;
+
+                                $http.get(`http://api.geonames.org/childrenJSON?geonameId=${geonameId}&username=dimashadianto`)
+                                    .then(function (childrenResponse) {
+                                        if (childrenResponse.data && childrenResponse.data.geonames) {
+                                            $scope.provinces = childrenResponse.data.geonames;
+                                        } else {
+                                            $scope.provinces = [];
+                                            console.warn('No provinces found for this country.');
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.error('Error fetching provinces:', error);
+                                        $scope.provinces = [];
+                                    });
+                            } else {
+                                console.warn('No matching country found in GeoNames for ccn3:', countryCcn3);
+                                $scope.provinces = [];
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Error fetching country info from GeoNames:', error);
+                            $scope.provinces = [];
+                        });
+                } else {
+                    console.warn('ccn3 not available for this country.');
+                    $scope.provinces = [];
+                }
             } else {
                 alert('Country details not found.');
                 $location.path('/');

@@ -9,11 +9,15 @@
     </div>
 
     <div class="translations">
-        <h2>Translations Of Country Name In Other Languange</h2>
+        <h2>Translations Of Country Name In Other Language</h2>
+        <select id="languageSelect" ng-model="selectedLang" ng-options="lang as lang for (lang, translation) in country.translations"></select>
+        <span>{{ selectedLang && country.translations[selectedLang] ? country.translations[selectedLang].common : 'Select a language to view translation' }}</span>
+    </div>       
+    
+    <div class="provinces" ng-if="provinces && provinces.length > 0">
+        <h2>Provinces/States</h2>
         <ul>
-            <li ng-repeat="(lang, translation) in country.translations">
-                <strong>{{ lang }}:</strong> {{ translation.common }}
-            </li>
+            <li ng-repeat="province in provinces">{{ province.name }}</li>
         </ul>
     </div>
 
