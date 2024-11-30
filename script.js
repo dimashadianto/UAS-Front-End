@@ -25,6 +25,11 @@ app.controller('CountryController', ['$scope', '$http', '$location', function($s
     $scope.searchQuery = '';
     $scope.searchType = 'name';
     $scope.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    $scope.dropdownVisible = false;
+
+    $scope.toggleFilters = function() {
+        $scope.dropdownVisible = !$scope.dropdownVisible;
+    };
 
     $http.get('https://restcountries.com/v3.1/all').then(function(response) {
         $scope.countries = response.data;
@@ -132,6 +137,39 @@ app.controller('CountryController', ['$scope', '$http', '$location', function($s
     $scope.viewDetails = function (countryName){
         $location.path(`/details/${countryName}`);
     };
+
+    $scope.filterByName = function(order) {
+        if (order === 'asc') {
+            $scope.countries.sort((a, b) => a.name.common.localeCompare(b.name.common)); // A-Z
+        } else if (order === 'desc') {
+            $scope.countries.sort((a, b) => b.name.common.localeCompare(a.name.common)); // Z-A
+        }
+        updateCountriesList();
+    };
+
+    $scope.filterByCode = function(order) {
+        if (order === 'asc') {
+            $scope.countries.sort((a, b) => a.ccn3 - b.ccn3); // Smallest to Largest
+        } else if (order === 'desc') {
+            $scope.countries.sort((a, b) => b.ccn3 - a.ccn3); // Largest to Smallest
+        }
+        updateCountriesList();
+    };
+
+    $scope.filterByPopulation = function(order) {
+        if (order === 'asc') {
+            $scope.countries.sort((a, b) => a.population - b.population); // Smallest to Largest
+        } else if (order === 'desc') {
+            $scope.countries.sort((a, b) => b.population - a.population); // Largest to Smallest
+        }
+        updateCountriesList();
+    };
+
+    function updateCountriesList() {
+        const startIndex = ($scope.currentPage - 1) * $scope.countriesPerPage;
+        $scope.countriesToShow = $scope.countries.slice(startIndex, startIndex + $scope.countriesPerPage);
+    }
+    
 }]);
 
 app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '$location', function ($scope, $routeParams, $http, $location) {
@@ -159,6 +197,13 @@ app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '
                                     .then(function (childrenResponse) {
                                         if (childrenResponse.data && childrenResponse.data.geonames) {
                                             $scope.provinces = childrenResponse.data.geonames;
+
+                                            if ($scope.provinces.length <= 10) {
+                                                $scope.gridColumns = 1;
+                                            } else {
+                                                $scope.gridColumns = 2;
+                                            }
+                                            
                                         } else {
                                             $scope.provinces = [];
                                             console.warn('No provinces found for this country.');

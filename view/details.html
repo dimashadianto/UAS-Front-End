@@ -16,9 +16,11 @@
     
     <div class="provinces" ng-if="provinces && provinces.length > 0">
         <h2>Provinces/States</h2>
-        <ul>
-            <li ng-repeat="province in provinces">{{ province.name }}</li>
-        </ul>
+        <div class="provinces-table">
+            <div class="province-cell" ng-repeat="province in provinces track by $index">
+                {{ province.name }}
+            </div>
+        </div>
     </div>
 
     <button class="back-button" ng-click="goBack()">Back to Home</button>
