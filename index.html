@@ -18,6 +18,19 @@
         <a ng-href="#!/">...</a>
         <a ng-href="#!/">...</a>
     </nav>
+
+    <div style="margin: 20px;">
+        <label for="regionFilter">Filter by Region:</label>
+        <select id="regionFilter" ng-model="selectedRegion" ng-change="filterByRegion(selectedRegion)">
+            <option value="">All</option>
+            <option value="Africa">Africa</option>
+            <option value="Americas">Americas</option>
+            <option value="Asia">Asia</option>
+            <option value="Europe">Europe</option>
+            <option value="Oceania">Oceania</option>
+        </select>
+    </div>
+
     <div ng-view></div>
 
     <footer>
