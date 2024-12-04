@@ -1,14 +1,13 @@
 var app = angular.module('countrypediaApp', ['ngRoute']);
-
-// Configurations
+ 
 app.config(['$routeProvider', function($routeProvider) {
     $routeProvider
         .when('/', {
             templateUrl: 'view/home.html',
             controller: 'CountryController'
         })
-        .when('/details/:countryName', {
-            templateUrl: 'view/details.html',
+        .when('/details/:countryName',{
+            templateUrl: '/view/details.html',
             controller: 'CountryDetailsController'
         })
         .when('/currency', {
@@ -19,93 +18,69 @@ app.config(['$routeProvider', function($routeProvider) {
             redirectTo: '/'
         });
 }]);
-
-// Shared Service for Region
-app.service('RegionService', function() {
-    this.selectedRegion = ''; // Shared region state
-});
-
-// MainController for Dropdown
-app.controller('MainController', ['$scope', 'RegionService', function($scope, RegionService) {
-    $scope.selectedRegion = RegionService.selectedRegion;
-
-    $scope.filterByRegion = function(region) {
-        console.log('Region selected:', region); // Debugging
-        RegionService.selectedRegion = region; // Update shared region state
-    };
-}]);
-
-// CountryController
-app.controller('CountryController', ['$scope', '$http', '$location', 'RegionService', function($scope, $http, $location, RegionService) {
+ 
+app.controller('CountryController', ['$scope', '$http', '$location', function($scope, $http, $location) {
     $scope.currentPage = 1;
     $scope.countriesPerPage = 18;
-    $scope.countries = [];
-    $scope.countriesToShow = [];
-    $scope.totalPages = 0;
     $scope.searchQuery = '';
     $scope.searchType = 'name';
     $scope.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-    $scope.selectedRegion = RegionService.selectedRegion;
-
-    function loadCountries() {
-        const region = RegionService.selectedRegion;
-        $scope.countries = [];
-        if (!region) {
-            $http.get('https://restcountries.com/v3.1/all').then(function(response) {
-                $scope.countries = response.data;
-                updatePagination();
-                updateCountriesList();
-            });
-        } else {
-            $http.get(`https://restcountries.com/v3.1/region/${region}`).then(function(response) {
-                $scope.countries = response.data;
-                updatePagination();
-                updateCountriesList();
-            });
-        }
-    }
-
-    function updatePagination() {
+    $scope.selectedRegion = '';
+ 
+    $http.get('https://restcountries.com/v3.1/all').then(function(response) {
+        $scope.countries = response.data;
         $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
-    }
-
+        updateCountriesList();
+        updatePagination();
+    });
+ 
     function updateCountriesList() {
         const startIndex = ($scope.currentPage - 1) * $scope.countriesPerPage;
         $scope.countriesToShow = $scope.countries.slice(startIndex, startIndex + $scope.countriesPerPage);
-    }
-
-    $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.totalPages) {
-            $scope.currentPage++;
-            updateCountriesList();
+    };
+ 
+    function updatePagination() {
+        const total = $scope.totalPages;
+        const current = $scope.currentPage;
+        $scope.pagesToShow = [];
+ 
+        if (total <= 10) {
+            $scope.pagesToShow = Array.from({ length: total }, (_, i) => i + 1);
+        } else {
+            if (current <= 3) {
+                $scope.pagesToShow = [1, 2, 3, '...', total - 2, total - 1, total];
+            } else if (current >= total - 2) {
+                $scope.pagesToShow = [1, 2, 3, '...', total - 2, total - 1, total];
+            } else {
+                $scope.pagesToShow = [1, '...', current - 1, current, current + 1, '...', total];
+            }
         }
     };
-
+ 
+    $scope.goToPage = function(page) {
+        if (page >= 1 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+            updateCountriesList();
+            updatePagination();
+        }
+    };
+ 
     $scope.prevPage = function() {
         if ($scope.currentPage > 1) {
             $scope.currentPage--;
             updateCountriesList();
+            updatePagination();
         }
     };
-
-    $scope.filterByLetter = function(letter) {
-        $http.get('https://restcountries.com/v3.1/all').then(function(response) {
-            $scope.countries = response.data.filter(function(country) {
-                return country.name.common.charAt(0).toUpperCase() === letter;
-            });
-
-            if ($scope.countries.length === 0) {
-                $scope.errorMessage = `No countries found starting with the letter "${letter}".`;
-            } else {
-                $scope.errorMessage = '';
-            }
-
-            updatePagination();
-            $scope.currentPage = 1;
+ 
+    $scope.nextPage = function() {
+        if ($scope.currentPage < $scope.totalPages) {
+            $scope.currentPage++;
             updateCountriesList();
-        });
+            updatePagination();
+        }
     };
-
+ 
     $scope.searchCountry = function() {
         let url;
         if ($scope.searchQuery) {
@@ -117,7 +92,7 @@ app.controller('CountryController', ['$scope', '$http', '$location', 'RegionServ
         } else {
             url = 'https://restcountries.com/v3.1/all';
         }
-
+   
         $http.get(url).then(function(response) {
             if ($scope.searchQuery && $scope.searchType === 'name') {
                 $scope.countries = response.data.filter(function(country) {
@@ -126,126 +101,204 @@ app.controller('CountryController', ['$scope', '$http', '$location', 'RegionServ
             } else {
                 $scope.countries = response.data;
             }
-
-            updatePagination();
+           
+            $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
             $scope.currentPage = 1;
             updateCountriesList();
+            updatePagination();
         }).catch(function(error) {
             alert('Country "' + $scope.searchQuery + '" not found. Please try again.');
         });
+    };    
+ 
+    $scope.filterByLetter = function(letter) {
+        $http.get('https://restcountries.com/v3.1/all').then(function(response) {
+            $scope.countries = response.data.filter(function(country) {
+                return country.name.common.charAt(0).toUpperCase() === letter;
+            });
+ 
+            if ($scope.countries.length === 0) {
+                $scope.errorMessage = `No countries found starting with the letter "${letter}".`;
+            } else {
+                $scope.errorMessage = '';
+            }
+ 
+            $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
+            $scope.currentPage = 1;
+            updateCountriesList();
+            updatePagination();
+        });
     };
-
-    $scope.$watch(function() {
-        return RegionService.selectedRegion;
-    }, function(newRegion, oldRegion) {
-        if (newRegion !== oldRegion) {
-            $scope.currentPage = 1; // Reset to first page
-            loadCountries();
+ 
+    $scope.filterByRegion = function() {
+        if ($scope.selectedRegion) {
+            $http.get(`https://restcountries.com/v3.1/region/${$scope.selectedRegion}`).then(function(response) {
+                $scope.countries = response.data;
+                $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
+                $scope.currentPage = 1;
+                updateCountriesList();
+                updatePagination();
+            });
+        } else {
+            $http.get('https://restcountries.com/v3.1/all').then(function(response) {
+                $scope.countries = response.data;
+                $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
+                updateCountriesList();
+                updatePagination();
+            });
         }
-    });
-
-    loadCountries();
+    };
+   
+    $scope.viewDetails = function (countryName){
+        $location.path(`/details/${countryName}`);
+    };
 }]);
-
-// CountryDetailsController
-app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '$location', function($scope, $routeParams, $http, $location) {
+ 
+app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '$location', function ($scope, $routeParams, $http, $location) {
     const countryName = $routeParams.countryName;
-
+ 
     $http.get(`https://restcountries.com/v3.1/name/${countryName}?fullText=true`)
-        .then(function(response) {
+        .then(function (response) {
             if (response.data && response.data.length > 0) {
                 $scope.country = response.data[0];
+                $scope.selectedLang = null;
+ 
+                const countryCcn3 = $scope.country.ccn3;
+ 
+                if (countryCcn3) {
+                    $http.get(`http://api.geonames.org/countryInfoJSON?username=dimashadianto`)
+                        .then(function (geoResponse) {
+                            const geoCountries = geoResponse.data.geonames;
+ 
+                            const matchedCountry = geoCountries.find(c => c.isoNumeric === countryCcn3);
+ 
+                            if (matchedCountry) {
+                                const geonameId = matchedCountry.geonameId;
+ 
+                                $http.get(`http://api.geonames.org/childrenJSON?geonameId=${geonameId}&username=dimashadianto`)
+                                    .then(function (childrenResponse) {
+                                        if (childrenResponse.data && childrenResponse.data.geonames) {
+                                            $scope.provinces = childrenResponse.data.geonames;
+                                        } else {
+                                            $scope.provinces = [];
+                                            console.warn('No provinces found for this country.');
+                                        }
+                                    })
+                                    .catch(function (error) {
+                                        console.error('Error fetching provinces:', error);
+                                        $scope.provinces = [];
+                                    });
+                            } else {
+                                console.warn('No matching country found in GeoNames for ccn3:', countryCcn3);
+                                $scope.provinces = [];
+                            }
+                        })
+                        .catch(function (error) {
+                            console.error('Error fetching country info from GeoNames:', error);
+                            $scope.provinces = [];
+                        });
+                } else {
+                    console.warn('ccn3 not available for this country.');
+                    $scope.provinces = [];
+                }
             } else {
                 alert('Country details not found.');
                 $location.path('/');
             }
         })
-        .catch(function(error) {
+        .catch(function (error) {
             alert('Error fetching country details.');
             $location.path('/');
         });
-
-    $scope.goBack = function() {
+ 
+    $scope.goBack = function () {
         $location.path('/');
     };
 }]);
-
-// CurrencyController
-app.controller('CurrencyController', ['$scope', '$http', 'RegionService', function($scope, $http, RegionService) {
+ 
+app.controller('CurrencyController', ['$scope', '$http', function ($scope, $http) {
     $scope.currentPage = 1;
     $scope.countriesPerPage = 10;
     $scope.countries = [];
     $scope.countriesToShow = [];
+    $scope.pagesToShow = [];
     $scope.totalPages = 0;
-
-    $scope.selectedRegion = RegionService.selectedRegion;
-
-    function loadCountries() {
-        const region = RegionService.selectedRegion;
-        $scope.countries = [];
-        if (!region) {
-            $http.get('https://restcountries.com/v3.1/all').then(function(response) {
-                $scope.countries = processCurrencyData(response.data);
-                updatePagination();
-                updateCountriesList();
+ 
+    $scope.loading = true;
+    $scope.error = null;
+ 
+    $http.get('https://restcountries.com/v3.1/all')
+        .then(function (response) {
+            $scope.countries = response.data.map(country => {
+                const currencyKey = country.currencies ? Object.keys(country.currencies)[0] : null;
+                const currency = currencyKey ? country.currencies[currencyKey] : { name: 'N/A', symbol: 'N/A' };
+ 
+                return {
+                    name: country.name?.common || 'Unknown',
+                    flag: country.flags?.png || 'https://via.placeholder.com/50',
+                    currencyName: currency.name || 'N/A',
+                    currencySymbol: currency.symbol || 'N/A',
+                    telCode: country.idd?.root && country.idd.suffixes?.length
+                        ? `${country.idd.root}${country.idd.suffixes[0]}`
+                        : 'N/A',
+                };
             });
-        } else {
-            $http.get(`https://restcountries.com/v3.1/region/${region}`).then(function(response) {
-                $scope.countries = processCurrencyData(response.data);
-                updatePagination();
-                updateCountriesList();
-            });
-        }
-    }
-
-    function processCurrencyData(data) {
-        return data.map(country => {
-            const currencyKey = country.currencies ? Object.keys(country.currencies)[0] : null;
-            const currency = currencyKey ? country.currencies[currencyKey] : { name: 'N/A', symbol: 'N/A' };
-
-            return {
-                name: country.name?.common || 'Unknown',
-                flag: country.flags?.png || 'https://via.placeholder.com/50',
-                currencyName: currency.name || 'N/A',
-                currencySymbol: currency.symbol || 'N/A',
-                telCode: country.idd?.root && country.idd.suffixes?.length
-                    ? `${country.idd.root}${country.idd.suffixes[0]}`
-                    : 'N/A',
-            };
+            $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
+            $scope.updateCountriesList();
+            $scope.updatePagination();
+            $scope.loading = false;
+        })
+        .catch(function (error) {
+            $scope.error = "Could not load currency data.";
+            $scope.loading = false;
+            console.error(error);
         });
-    }
-
-    function updatePagination() {
-        $scope.totalPages = Math.ceil($scope.countries.length / $scope.countriesPerPage);
-    }
-
-    function updateCountriesList() {
+ 
+    $scope.updateCountriesList = function () {
         const startIndex = ($scope.currentPage - 1) * $scope.countriesPerPage;
         $scope.countriesToShow = $scope.countries.slice(startIndex, startIndex + $scope.countriesPerPage);
-    }
-
-    $scope.nextPage = function() {
-        if ($scope.currentPage < $scope.totalPages) {
-            $scope.currentPage++;
-            updateCountriesList();
+    };
+ 
+    $scope.updatePagination = function () {
+        const total = $scope.totalPages;
+        const current = $scope.currentPage;
+        $scope.pagesToShow = [];
+ 
+        if (total <= 10) {
+            $scope.pagesToShow = Array.from({ length: total }, (_, i) => i + 1);
+        } else {
+            if (current <= 3) {
+                $scope.pagesToShow = [1, 2, 3, '...', total];
+            } else if (current >= total - 2) {
+                $scope.pagesToShow = [1, '...', total - 2, total - 1, total];
+            } else {
+                $scope.pagesToShow = [1, '...', current - 1, current, current + 1, '...', total];
+            }
         }
     };
-
-    $scope.prevPage = function() {
+ 
+    $scope.goToPage = function (page) {
+        if (page >= 1 && page <= $scope.totalPages) {
+            $scope.currentPage = page;
+            $scope.updateCountriesList();
+            $scope.updatePagination();
+        }
+    };
+ 
+    $scope.prevPage = function () {
         if ($scope.currentPage > 1) {
             $scope.currentPage--;
-            updateCountriesList();
+            $scope.updateCountriesList();
+            $scope.updatePagination();
         }
     };
-
-    $scope.$watch(function() {
-        return RegionService.selectedRegion;
-    }, function(newRegion, oldRegion) {
-        if (newRegion !== oldRegion) {
-            $scope.currentPage = 1; // Reset to first page
-            loadCountries();
+ 
+    $scope.nextPage = function () {
+        if ($scope.currentPage < $scope.totalPages) {
+            $scope.currentPage++;
+            $scope.updateCountriesList();
+            $scope.updatePagination();
         }
-    });
-
-    loadCountries();
+    };
 }]);
+
