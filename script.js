@@ -179,6 +179,13 @@ app.controller('CountryDetailsController', ['$scope', '$routeParams', '$http', '
                                     .then(function (childrenResponse) {
                                         if (childrenResponse.data && childrenResponse.data.geonames) {
                                             $scope.provinces = childrenResponse.data.geonames;
+
+                                            if ($scope.provinces.length <= 10) {
+                                                $scope.gridColumns = 1;
+                                            } else {
+                                                $scope.gridColumns = 2;
+                                            }
+                                            
                                         } else {
                                             $scope.provinces = [];
                                             console.warn('No provinces found for this country.');
