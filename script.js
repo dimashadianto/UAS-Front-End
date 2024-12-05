@@ -26,6 +26,7 @@ app.controller('CountryController', ['$scope', '$http', '$location', function($s
     $scope.searchType = 'name';
     $scope.alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
     $scope.selectedRegion = '';
+    $scope.sortOption = '';
  
     $http.get('https://restcountries.com/v3.1/all').then(function(response) {
         $scope.countries = response.data;
@@ -151,6 +152,39 @@ app.controller('CountryController', ['$scope', '$http', '$location', function($s
    
     $scope.viewDetails = function (countryName){
         $location.path(`/details/${countryName}`);
+    };
+
+    $scope.sortCountries = function () {
+        if ($scope.sortOption === "name_asc") {
+            $scope.countries.sort((a, b) => a.name.common.localeCompare(b.name.common));
+        } else if ($scope.sortOption === "name_desc") {
+            $scope.countries.sort((a, b) => b.name.common.localeCompare(a.name.common));
+        } else if ($scope.sortOption === "code_asc") {
+            $scope.countries.sort((a, b) => {
+                const codeA = parseInt(a.ccn3 || '0');
+                const codeB = parseInt(b.ccn3 || '0');
+                return codeA - codeB;
+            });
+        } else if ($scope.sortOption === "code_desc") {
+            $scope.countries.sort((a, b) => {
+                const codeA = parseInt(a.ccn3 || '0');
+                const codeB = parseInt(b.ccn3 || '0');
+                return codeB - codeA;
+            });
+        } else if ($scope.sortOption === "population_desc") {
+            $scope.countries.sort((a, b) => b.population - a.population);
+        } else if ($scope.sortOption === "population_asc") {
+            $scope.countries.sort((a, b) => a.population - b.population);
+        }
+
+        // untuk mengatur atau memperbarui ke tampilan awal home
+        $scope.currentPage = 1; //mereset ke halaman pertama
+        updateCountriesList(); // mengupdate list negaranya
+        updatePagination(); // mengupdate pagination
+
+        if ($location.path() != '/'){
+            $location.path('/');
+        }
     };
 }]);
  

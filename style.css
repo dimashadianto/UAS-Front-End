@@ -139,7 +139,10 @@ nav a:hover::after {
 }
 
 .letter-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: var(--beige);
+    color: var(--white);
 }
 
 .countries .search-container {
@@ -464,3 +467,29 @@ footer p {
     background-color: var(--white);
     cursor: pointer;
 }
+
+.sort-filter select {
+    width: 220px;
+    padding: 12px 15px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: linear-gradient(145deg, #ffffff, #f9f9f9);
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-left: 10px;
+}
+
+.sort-filter select:hover {
+    border-color: #a69b8d;
+    background: linear-gradient(145deg, #f5f5f5, #ffffff);
+}
+
+.sort-filter select:focus {
+    outline: none; 
+    border-color: #a69b8d; 
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+

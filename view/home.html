@@ -21,6 +21,18 @@
                 <option value="Americas">Americas</option>
             </select>
         </div>
+
+        <div class="sort-filter">
+            <select ng-model="sortOption" ng-change="sortCountries()">
+                <option value="">Sort by</option>
+            <option value="name_asc">Name (A-Z)</option>
+            <option value="name_desc">Name (Z-A)</option>
+            <option value="code_asc">Code (Smallest to Largest)</option>
+            <option value="code_desc">Code (Largest to Smallest)</option>
+            <option value="population_desc">Population (Largest to Smallest)</option>
+            <option value="population_asc">Population (Smallest to Largest)</option>
+            </select>
+        </div>
     </div>
     <div ng-if="errorMessage">
         <p>{{ errorMessage }}</p>
