@@ -1,16 +1,28 @@
 <div class="countries">
     <div class="alphabet-list">
         <button ng-click="filterByLetter(letter)" ng-repeat="letter in alphabet" class="letter-btn">{{ letter }}</button>
-    </div>   
-    <div class="search-container">
-        <input type="text" ng-model="searchQuery" placeholder="Search ...">
-        <select ng-model="searchType">
-            <option value="name">Name</option>
-            <option value="code">Code</option>
-        </select>
-        <button ng-click="searchCountry()"><i class="bi bi-search"></i></button>
-    </div>    
-    <div ng-if="errorMessage" >
+    </div>  
+    <div class="search-filter-container">
+        <div class="search-container">
+            <input type="text" ng-model="searchQuery" placeholder="Search ...">
+            <select ng-model="searchType">
+                <option value="name">Name</option>
+                <option value="code">Code</option>
+            </select>
+            <button ng-click="searchCountry()"><i class="bi bi-search"></i></button>
+        </div>
+        <div class="continent-filter">
+            <select ng-model="selectedRegion" ng-change="filterByRegion()">
+                <option value="">Select Region</option>
+                <option value="Africa">Africa</option>
+                <option value="Asia">Asia</option>
+                <option value="Europe">Europe</option>
+                <option value="Oceania">Australia</option>
+                <option value="Americas">Americas</option>
+            </select>
+        </div>
+    </div>
+    <div ng-if="errorMessage">
         <p>{{ errorMessage }}</p>
     </div>
     <ul class="countries-list">
