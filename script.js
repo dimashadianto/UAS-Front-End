@@ -138,6 +138,7 @@ app.controller('CountryController', ['$scope', '$http', '$location', function($s
                 $scope.currentPage = 1;
                 updateCountriesList();
                 updatePagination();
+                $scope.errorMessage = '';
             });
         } else {
             $http.get('https://restcountries.com/v3.1/all').then(function(response) {
