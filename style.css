@@ -28,7 +28,7 @@ nav {
 }
 
 nav a {
-    color: var(--black);
+    color: var(--white);
     text-decoration: none;
     margin: 0px 15px;
     font-size: 20px;
@@ -139,7 +139,10 @@ nav a:hover::after {
 }
 
 .letter-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     background-color: var(--beige);
+    color: var(--white);
 }
 
 .countries .search-container {
@@ -253,6 +256,44 @@ footer p {
     margin: 5px 0;
 }
 
+.provinces-table {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
+    margin: 20px auto;
+    max-width: 100%;
+    padding: 10px;
+    border: 1px solid var(--grey);
+    border-radius: 8px;
+    background-color: var(--grey-light);
+    justify-items: center;
+}
+
+.provinces-cell {
+    background-color: var(--white);
+    padding: 12px;
+    text-align: center;
+    font-size: 16px;
+    border-radius: 5px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.provinces-cell:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2);
+}
+
+.provinces {
+    margin-top: 20px;
+}
+
+.provinces h2 {
+    text-align: center;
+    font-size: 22px;
+    margin-bottom: 15px;
+}
+
 .back-button {
     padding: 10px 20px;
     background-color: var(--brown-light);
@@ -267,3 +308,202 @@ footer p {
 .back-button:hover {
     background-color: var(--beige);
 }
+
+.currency-view {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+ 
+.currency-view h2 {
+    text-align: center;
+    color: var(--brown-dark);
+    font-size: 24px;
+    margin-bottom: 20px;
+    font-weight: bold;
+}
+ 
+.currency-view div[ng-show="loading"],
+.currency-view div[ng-show="error"] {
+    text-align: center;
+    color: var(--brown-light);
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+ 
+.currency-view table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: var(--white);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+ 
+.currency-view table thead {
+    background-color: var(--brown-light);
+    color: var(--white);
+    font-size: 16px;
+    text-align: left;
+}
+ 
+.currency-view table thead th {
+    padding: 10px 15px;
+    text-transform: uppercase;
+}
+ 
+.currency-view table tbody tr {
+    transition: background-color 0.3s ease;
+}
+ 
+.currency-view table tbody tr:hover {
+    background-color: var(--grey);
+}
+ 
+.currency-view table tbody td {
+    padding: 10px 15px;
+    color: var(--brown-dark);
+    font-size: 14px;
+    text-align: left;
+    vertical-align: middle;
+}
+ 
+.currency-view table tbody td img {
+    border-radius: 4px;
+}
+ 
+.currency-view .pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+ 
+.currency-view .pagination button {
+    padding: 8px 16px;
+    background-color: var(--brown-light);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+ 
+.currency-view .pagination button:hover {
+    background-color: var(--beige);
+}
+ 
+.currency-view .pagination button:disabled {
+    background-color: var(--grey);
+    cursor: not-allowed;
+}
+
+.continent-filter select {
+    width: 200px; 
+    padding: 10px; 
+    font-size: 16px; 
+    border-radius: 5px; 
+    border: 1px solid var(--brown-light);
+    background-color: var(--white); 
+    cursor: pointer;
+}
+
+.continent-filter select:focus {
+    outline: none;
+    border-color: var(--brown-dark); 
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2); 
+}
+
+.continent-filter select option {
+    padding: 10px; 
+    font-size: 16px; 
+}
+.search-filter-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.search-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.search-container input {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--brown-light);
+}
+
+.search-container select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    border: 1px solid var(--brown-light);
+}
+
+.search-container button {
+    padding: 10px;
+    background-color: var(--brown-light);
+    color: var(--white);
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-container button:hover {
+    background-color: var(--beige);
+}
+
+.continent-filter select {
+    width: 150px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 10px;
+    border: 1px solid #ddd;
+    background: linear-gradient(145deg, #ffffff, #f9f9f9);
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+
+.continent-filter select:hover {
+    border-color: var(--beige);
+    background: linear-gradient(145deg, #f5f5f5, #ffffff);
+}
+
+.continent-filter select:focus {
+    outline: none;
+    border-color: var(--beige);
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
+}
+
+.sort-filter select {
+    width: 275px;
+    padding: 10px 15px;
+    font-size: 16px;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    border-radius: 10px;
+    border: 1px solid var(--grey-light);
+    background: linear-gradient(145deg, #ffffff, #f9f9f9);
+    color: #333;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.sort-filter select:hover {
+    border-color: var(--beige);
+    background: linear-gradient(145deg, #f5f5f5, #ffffff);
+}
+
+.sort-filter select:focus {
+    outline: none; 
+    border-color: var(--beige); 
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
