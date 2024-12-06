@@ -178,10 +178,9 @@ app.controller('CountryController', ['$scope', '$http', '$location', function($s
             $scope.countries.sort((a, b) => a.population - b.population);
         }
 
-        // untuk mengatur atau memperbarui ke tampilan awal home
-        $scope.currentPage = 1; //mereset ke halaman pertama
-        updateCountriesList(); // mengupdate list negaranya
-        updatePagination(); // mengupdate pagination
+        $scope.currentPage = 1;
+        updateCountriesList();
+        updatePagination();
 
         if ($location.path() != '/'){
             $location.path('/');

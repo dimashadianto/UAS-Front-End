@@ -28,7 +28,7 @@ nav {
 }
 
 nav a {
-    color: var(--black);
+    color: var(--white);
     text-decoration: none;
     margin: 0px 15px;
     font-size: 20px;
@@ -258,15 +258,15 @@ footer p {
 
 .provinces-table {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); /* menyesuaikan jumlah kolom dengan isinya */
-    gap: 15px; /* jarak antar kolom */
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 15px;
     margin: 20px auto;
-    max-width: 100%; /* Agar grid dapat menyesuaikan lebar kontainer */
+    max-width: 100%;
     padding: 10px;
     border: 1px solid var(--grey);
     border-radius: 8px;
-    background-color: var(--grey-light); /* warna backround */
-    justify-items: center; /* agar grid berada di tengah */
+    background-color: var(--grey-light);
+    justify-items: center;
 }
 
 .provinces-cell {
@@ -473,13 +473,13 @@ footer p {
 
 
 .continent-filter select:hover {
-    border-color: #a69b8d;
+    border-color: var(--beige);
     background: linear-gradient(145deg, #f5f5f5, #ffffff);
 }
 
 .continent-filter select:focus {
     outline: none;
-    border-color: #a69b8d;
+    border-color: var(--beige);
     box-shadow: 0 0 8px rgba(0, 0, 0, 0.2);
 }
 
@@ -489,22 +489,21 @@ footer p {
     font-size: 16px;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     border-radius: 10px;
-    border: 1px solid #ddd;
+    border: 1px solid var(--grey-light);
     background: linear-gradient(145deg, #ffffff, #f9f9f9);
     color: #333;
     cursor: pointer;
     transition: all 0.3s ease;
-    margin-left: 10px;
 }
 
 .sort-filter select:hover {
-    border-color: #a69b8d;
+    border-color: var(--beige);
     background: linear-gradient(145deg, #f5f5f5, #ffffff);
 }
 
 .sort-filter select:focus {
     outline: none; 
-    border-color: #a69b8d; 
+    border-color: var(--beige); 
     box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
 }
 
